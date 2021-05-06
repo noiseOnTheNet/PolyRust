@@ -1,0 +1,2 @@
+run = "echo $( pwd ) && cd poly && cargo test"
+language = "rust"
