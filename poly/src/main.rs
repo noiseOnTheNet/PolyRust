@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use std::ops;
 struct Poly{
   coeff : Vec<f32>
 }
@@ -29,6 +30,13 @@ impl Poly{
     Poly{coeff : common_sum}
   }
 }
+impl ops::Add<& Poly> for & Poly {
+    type Output = Poly;
+
+    fn add(self, rhs: & Poly) -> Poly {
+      self.sum(rhs)
+    }
+}
 #[test]
 fn test_display() {
   let x = Poly{coeff:vec![0.0,1.0,2.0]};
@@ -43,7 +51,9 @@ fn test_eval() {
 fn test_sum(){
   let x = Poly{coeff:vec![0.0,1.0,2.0]};
   let y = Poly{coeff:vec![3.0,4.0,2.0,1.0]};
-  let z = x.sum(&y);
+  let z = &x + &y;
   assert_eq!(z.coeff,vec![3.0,5.0,4.0,1.0]);
+  let w = &y + &x;
+  assert_eq!(w.coeff,vec![3.0,5.0,4.0,1.0]);
 }
 
