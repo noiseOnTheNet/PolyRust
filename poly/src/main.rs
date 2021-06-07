@@ -1,5 +1,6 @@
 use itertools::Itertools;
 use std::ops;
+use std::vec::Vec;
 struct Poly{
   coeff : Vec<f32>
 }
@@ -29,7 +30,16 @@ impl Poly{
     };
     Poly{coeff : common_sum}
   }
+  pub fn derive(& self) -> Poly {
+    let derived_coeff : Vec <f32> = self.coeff.iter()
+    .enumerate()
+    .map(|(i,c)| (i as f32) *c)
+    .collect();
+    let stripped_coeff : Vec<f32> = derived_coeff[1..].iter().cloned().collect();
+    Poly{ coeff: stripped_coeff }
+  }
 }
+
 impl ops::Add<& Poly> for & Poly {
     type Output = Poly;
 
@@ -55,5 +65,12 @@ fn test_sum(){
   assert_eq!(z.coeff,vec![3.0,5.0,4.0,1.0]);
   let w = &y + &x;
   assert_eq!(w.coeff,vec![3.0,5.0,4.0,1.0]);
+  let h = &x + &x;
+  assert_eq!(h.coeff,vec![0.0,2.0,4.0]);
+}
+#[test]
+fn test_derive(){
+  let x = Poly{coeff:vec![3.0,4.0,1.0,2.0]};
+  assert_eq!(x.derive().coeff,vec![4.0,2.0,6.0])
 }
 
